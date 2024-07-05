@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import {
   Card,
@@ -10,6 +9,11 @@ import {
   Box,
   Grid,
   Container,
+  Select,
+  MenuItem,
+  Slider,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { motion } from "framer-motion";
@@ -114,18 +118,97 @@ export default function ProductList() {
     },
   ]);
 
+  const [filters, setFilters] = useState({
+    category: "",
+    priceRange: { min: 0, max: 100 },
+    availability: false,
+  });
+
+  // Function to update filters
+  const handleFiltersChange = (newFilters) => {
+    setFilters({ ...filters, ...newFilters });
+  };
+
+  // Function to filter products based on current filters
+  const filteredProducts = products.filter((product) => {
+    const meetsCategoryFilter =
+      !filters.category || product.category === filters.category;
+    const meetsPriceRangeFilter =
+      product.price >= filters.priceRange.min &&
+      product.price <= filters.priceRange.max;
+    const meetsAvailabilityFilter = !filters.availability || product.available;
+
+    return (
+      meetsCategoryFilter && meetsPriceRangeFilter && meetsAvailabilityFilter
+    );
+  });
+
   return (
     <Container>
       <Box my={4}>
-        <Typography variant="h3" component="h1" gutterBottom>
+        <Typography variant="h4" component="h1" gutterBottom>
           Featured Products
         </Typography>
         <Typography variant="h6" color="textSecondary">
           Discover our curated selection of high-quality products.
         </Typography>
       </Box>
+
+      {/* Filter panel */}
+      <Box mb={4}>
+        <Typography variant="h6" gutterBottom>
+          Filters
+        </Typography>
+        <Grid container spacing={6}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Select
+              value={filters.category}
+              onChange={(e) =>
+                handleFiltersChange({ category: e.target.value })
+              }
+              fullWidth
+            >
+              <MenuItem value="">All Categories</MenuItem>
+              <MenuItem value="Clothing">Clothing</MenuItem>
+              <MenuItem value="Home">Home</MenuItem>
+              <MenuItem value="Accessories">Accessories</MenuItem>
+            </Select>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography id="price-range-slider" gutterBottom>
+              Price Range
+            </Typography>
+            <Slider
+              value={[filters.priceRange.min, filters.priceRange.max]}
+              onChange={(e, newValue) =>
+                handleFiltersChange({
+                  priceRange: { min: newValue[0], max: newValue[1] },
+                })
+              }
+              valueLabelDisplay="auto"
+              min={0}
+              max={100}
+              aria-labelledby="price-range-slider"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={filters.availability}
+                  onChange={(e) =>
+                    handleFiltersChange({ availability: e.target.checked })
+                  }
+                />
+              }
+              label="Available Only"
+            />
+          </Grid>
+        </Grid>
+      </Box>
+
       <Grid container spacing={4}>
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <Grid item xs={12} sm={6} lg={4} key={product.id}>
             <ProductCard product={product} />
           </Grid>
