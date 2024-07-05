@@ -4,7 +4,7 @@ import { useEffect } from "react";
 // import SideBar from "./dashboard/SideBar/SideBar";
 // import Navbar from "./dashboard/NavBar/Navbar";
 import { useRouter } from "next/navigation";
-// import InnerLayout from "./InnerLayout";
+import InnerLayout from "./InnerLayout";
 import Login from "./login";
 
 const GateWay = ({ children }) => {
@@ -20,7 +20,7 @@ const GateWay = ({ children }) => {
     }
   }, []);
   // console.log(user, "check abc");
-  return <Login />;
+  return !user?.token ? <Login /> : <InnerLayout>{children}</InnerLayout>;
 };
 
 export default GateWay;
