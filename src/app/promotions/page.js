@@ -8,9 +8,10 @@ import {
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
 } from "@mui/x-data-grid";
-import { Box, Typography, TextField, Modal } from "@mui/material";
+import { Box, Typography, TextField, Modal, Button } from "@mui/material";
 import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
 import Layout from "@/components/transitionlayout";
+import AddPromotionModal from "@/components/AddPromotionModal";
 
 const PromotionPage = () => {
   const [promotions, setPromotions] = useState([
@@ -54,6 +55,7 @@ const PromotionPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPromotion, setSelectedPromotion] = useState(null);
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState(false);
 
   const columns = [
     { field: "promotionCode", headerName: "Promotion Code", width: 150 },
@@ -86,6 +88,21 @@ const PromotionPage = () => {
     setOpenDetailsModal(false);
   };
 
+  const handleOpenAddModal = () => {
+    setOpenAddModal(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setOpenAddModal(false);
+  };
+
+  const handleAddPromotion = (newPromotion) => {
+    const newId = promotions.length + 1; // Generate a new ID (you might want to use a more robust method in production)
+    const newPromotionWithId = { ...newPromotion, id: newId };
+    setPromotions([...promotions, newPromotionWithId]);
+    setOpenAddModal(false);
+  };
+
   return (
     <Layout>
       <CustomBreadcrumbs
@@ -108,6 +125,15 @@ const PromotionPage = () => {
           <Typography variant="h4" component="h1" gutterBottom>
             Promotions List
           </Typography>
+        </div>
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenAddModal}
+          >
+            Add Promotion
+          </Button>
         </div>
       </Box>
       <Box my={2}>
@@ -141,6 +167,7 @@ const PromotionPage = () => {
         />
       </div>
 
+      {/* Promotion Details Modal */}
       <Modal open={openDetailsModal} onClose={handleCloseDetails}>
         <Box
           sx={{
@@ -179,6 +206,12 @@ const PromotionPage = () => {
           )}
         </Box>
       </Modal>
+
+      <AddPromotionModal
+        open={openAddModal}
+        onClose={handleCloseAddModal}
+        onAdd={handleAddPromotion}
+      />
     </Layout>
   );
 };
