@@ -8,7 +8,8 @@ import {
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
 } from "@mui/x-data-grid";
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
+import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
 
 const ProductList = () => {
   const [products, setProducts] = useState([
@@ -76,15 +77,38 @@ const ProductList = () => {
     { field: "category", headerName: "Category", width: 150 },
   ];
 
+  const handleAddProduct = () => {
+    // Implement your logic to add a product
+    // This function can open a modal, navigate to a new page, etc.
+    console.log("Add Product clicked");
+  };
+
   return (
     <div>
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Featured Products
-        </Typography>
-        <Typography variant="h6" color="textSecondary">
-          Discover our curated selection of high-quality products.
-        </Typography>
+      <CustomBreadcrumbs
+        title={"Products"}
+        links={[
+          {
+            path: "/product",
+            title: "Product",
+            active: true,
+          },
+        ]}
+      />
+      <Box
+        my={4}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <div>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Featured Products
+          </Typography>
+        </div>
+        <Button variant="contained" color="primary" onClick={handleAddProduct}>
+          Add Product
+        </Button>
       </Box>
       <div style={{ height: 400, width: "100%" }}>
         <DataGrid
