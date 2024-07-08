@@ -1,21 +1,20 @@
 "use client";
 import React, { useState } from "react";
+import { Box, Typography, TextField, Button } from "@mui/material";
+import { useRouter } from "next/router";
+import Layout from "@/components/transitionlayout";
+import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
+import AddProductModal from "@/components/AddProductModal"; // Adjust the import path as per your project structure
 import {
   DataGrid,
   GridToolbarContainer,
-  GridToolbarExport,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
   GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarDensitySelector,
+  GridToolbarExport,
 } from "@mui/x-data-grid";
-import { Box, Typography, TextField, Button } from "@mui/material";
-import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
-import { useRouter } from "next/navigation";
-import Layout from "@/components/transitionlayout";
 
 const ProductList = () => {
-  const router = useRouter();
-
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -75,13 +74,14 @@ const ProductList = () => {
 
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const columns = [
     { field: "name", headerName: "Name", width: 200 },
+    { field: "category", headerName: "Category", width: 150 },
     { field: "description", headerName: "Description", width: 300 },
     { field: "rating", headerName: "Rating", width: 120 },
     { field: "price", headerName: "Price", width: 120 },
-    { field: "category", headerName: "Category", width: 150 },
   ];
 
   const handleSearch = (e) => {
@@ -98,7 +98,20 @@ const ProductList = () => {
   };
 
   const handleAddProduct = () => {
-    router.push("/product/add");
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleProductAddition = (newProduct) => {
+    const updatedProducts = [
+      ...products,
+      { id: products.length + 1, ...newProduct },
+    ];
+    setProducts(updatedProducts);
+    setIsModalOpen(false);
   };
 
   return (
@@ -156,6 +169,11 @@ const ProductList = () => {
           }}
         />
       </div>
+      <AddProductModal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        onAdd={handleProductAddition}
+      />
     </Layout>
   );
 };
