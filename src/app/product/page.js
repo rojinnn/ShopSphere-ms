@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   DataGrid,
   GridToolbarContainer,
@@ -8,13 +8,14 @@ import {
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
 } from "@mui/x-data-grid";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, TextField, Button } from "@mui/material";
 import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/transitionlayout";
 
 const ProductList = () => {
   const router = useRouter();
+
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -72,6 +73,9 @@ const ProductList = () => {
     },
   ]);
 
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const columns = [
     { field: "name", headerName: "Name", width: 200 },
     { field: "description", headerName: "Description", width: 300 },
@@ -80,60 +84,77 @@ const ProductList = () => {
     { field: "category", headerName: "Category", width: 150 },
   ];
 
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+
+    const filteredData = products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(value) ||
+        product.description.toLowerCase().includes(value) ||
+        product.category.toLowerCase().includes(value)
+    );
+    setFilteredProducts(filteredData);
+  };
+
   const handleAddProduct = () => {
     router.push("/product/add");
   };
 
   return (
     <Layout>
-      <div>
-        <CustomBreadcrumbs
-          title={"Products"}
-          links={[
-            {
-              path: "/product",
-              title: "Product",
-              active: true,
-            },
-          ]}
-        />
-        <Box
-          my={4}
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <div>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Featured Products
-            </Typography>
-          </div>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddProduct}
-          >
-            Add Product
-          </Button>
-        </Box>
-        <div style={{ height: 400, width: "100%" }}>
-          <DataGrid
-            rows={products}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5, 10, 20]}
-            components={{
-              Toolbar: () => (
-                <GridToolbarContainer>
-                  <GridToolbarColumnsButton />
-                  <GridToolbarFilterButton />
-                  <GridToolbarDensitySelector />
-                  <GridToolbarExport />
-                </GridToolbarContainer>
-              ),
-            }}
-          />
+      <CustomBreadcrumbs
+        title={"Products"}
+        links={[
+          {
+            path: "/product",
+            title: "Product",
+            active: true,
+          },
+        ]}
+      />
+      <Box
+        my={4}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <div>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Featured Products
+          </Typography>
         </div>
+        <Button variant="contained" color="primary" onClick={handleAddProduct}>
+          Add Product
+        </Button>
+      </Box>
+      <Box my={2}>
+        <TextField
+          label="Search Products"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </Box>
+      <div style={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={searchTerm ? filteredProducts : products}
+          columns={columns}
+          pageSize={5}
+          pagination
+          rowsPerPageOptions={[5, 10, 20]}
+          components={{
+            Toolbar: () => (
+              <GridToolbarContainer>
+                <GridToolbarColumnsButton />
+                <GridToolbarFilterButton />
+                <GridToolbarDensitySelector />
+                <GridToolbarExport />
+              </GridToolbarContainer>
+            ),
+          }}
+        />
       </div>
     </Layout>
   );
