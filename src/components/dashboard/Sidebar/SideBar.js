@@ -177,7 +177,7 @@ const SideBar = ({ onToggle }) => {
     },
     {
       title: "Promotions",
-      link: "/promotion",
+      link: "/promotions",
       icon: (
         <LocalOfferIcon size={24} className="icon" style={{ color: "red" }} />
       ),
