@@ -8,12 +8,10 @@ import {
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
 } from "@mui/x-data-grid";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, TextField } from "@mui/material";
 import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
-import { useRouter } from "next/navigation";
 
 const OrderPage = () => {
-  const router = useRouter();
   const [orders, setOrders] = useState([
     {
       id: 1,
@@ -33,6 +31,9 @@ const OrderPage = () => {
     },
   ]);
 
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const columns = [
     { field: "orderNumber", headerName: "Order Number", width: 150 },
     { field: "customerName", headerName: "Customer Name", width: 200 },
@@ -40,6 +41,19 @@ const OrderPage = () => {
     { field: "status", headerName: "Status", width: 150 },
     { field: "date", headerName: "Date", width: 150 },
   ];
+
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+
+    const filteredData = orders.filter(
+      (order) =>
+        order.orderNumber.toLowerCase().includes(value) ||
+        order.customerName.toLowerCase().includes(value) ||
+        order.status.toLowerCase().includes(value)
+    );
+    setFilteredOrders(filteredData);
+  };
 
   return (
     <Box p={4}>
@@ -64,20 +78,24 @@ const OrderPage = () => {
             Orders List
           </Typography>
         </div>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => router.push("/orders/add")}
-        >
-          Add Order
-        </Button>
+      </Box>
+      <Box my={2}>
+        <TextField
+          label="Search Orders"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
       </Box>
       <div style={{ height: 400, width: "100%" }}>
         <DataGrid
-          rows={orders}
+          rows={searchTerm ? filteredOrders : orders}
           columns={columns}
           pageSize={5}
+          pagination
           rowsPerPageOptions={[5, 10, 20]}
+          sortingOrder={["asc", "desc"]}
           components={{
             Toolbar: () => (
               <GridToolbarContainer>
