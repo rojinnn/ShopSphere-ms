@@ -10,6 +10,7 @@ import {
 } from "@mui/x-data-grid";
 import { Box, Typography, TextField } from "@mui/material";
 import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
+import Layout from "@/components/transitionlayout";
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([
@@ -56,7 +57,7 @@ const OrderPage = () => {
   };
 
   return (
-    <Box p={4}>
+    <Layout>
       <CustomBreadcrumbs
         title="Orders"
         links={[
@@ -108,7 +109,7 @@ const OrderPage = () => {
           }}
         />
       </div>
-    </Box>
+    </Layout>
   );
 };
 

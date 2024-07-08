@@ -11,6 +11,7 @@ import {
 import { Box, Typography, Button } from "@mui/material";
 import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
 import { useRouter } from "next/navigation";
+import Layout from "@/components/transitionlayout";
 
 const ProductList = () => {
   const router = useRouter();
@@ -84,51 +85,57 @@ const ProductList = () => {
   };
 
   return (
-    <div>
-      <CustomBreadcrumbs
-        title={"Products"}
-        links={[
-          {
-            path: "/product",
-            title: "Product",
-            active: true,
-          },
-        ]}
-      />
-      <Box
-        my={4}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <div>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Featured Products
-          </Typography>
-        </div>
-        <Button variant="contained" color="primary" onClick={handleAddProduct}>
-          Add Product
-        </Button>
-      </Box>
-      <div style={{ height: 400, width: "100%" }}>
-        <DataGrid
-          rows={products}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5, 10, 20]}
-          components={{
-            Toolbar: () => (
-              <GridToolbarContainer>
-                <GridToolbarColumnsButton />
-                <GridToolbarFilterButton />
-                <GridToolbarDensitySelector />
-                <GridToolbarExport />
-              </GridToolbarContainer>
-            ),
-          }}
+    <Layout>
+      <div>
+        <CustomBreadcrumbs
+          title={"Products"}
+          links={[
+            {
+              path: "/product",
+              title: "Product",
+              active: true,
+            },
+          ]}
         />
+        <Box
+          my={4}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <div>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Featured Products
+            </Typography>
+          </div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAddProduct}
+          >
+            Add Product
+          </Button>
+        </Box>
+        <div style={{ height: 400, width: "100%" }}>
+          <DataGrid
+            rows={products}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5, 10, 20]}
+            components={{
+              Toolbar: () => (
+                <GridToolbarContainer>
+                  <GridToolbarColumnsButton />
+                  <GridToolbarFilterButton />
+                  <GridToolbarDensitySelector />
+                  <GridToolbarExport />
+                </GridToolbarContainer>
+              ),
+            }}
+          />
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
