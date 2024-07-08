@@ -7,30 +7,33 @@ import store from "@/store/store";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GateWay from "@/components/Gateway";
+import { ThemeProvider } from "@/context/themecontext";
 
 // Initialize a QueryClient
 const queryClient = new QueryClient();
 
 export default function Home() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <main className={styles.main}>
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-          <GateWay>{/* <Dashboard /> */}</GateWay>
-        </main>
-      </Provider>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <main className={styles.main}>
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+            <GateWay>{/* <Dashboard /> */}</GateWay>
+          </main>
+        </Provider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
