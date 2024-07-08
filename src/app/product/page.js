@@ -10,8 +10,10 @@ import {
 } from "@mui/x-data-grid";
 import { Box, Typography, Button } from "@mui/material";
 import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
+import { useRouter } from "next/navigation";
 
 const ProductList = () => {
+  const router = useRouter();
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -78,9 +80,7 @@ const ProductList = () => {
   ];
 
   const handleAddProduct = () => {
-    // Implement your logic to add a product
-    // This function can open a modal, navigate to a new page, etc.
-    console.log("Add Product clicked");
+    router.push("/product/add");
   };
 
   return (
