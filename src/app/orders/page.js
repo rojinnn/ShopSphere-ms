@@ -8,7 +8,8 @@ import {
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
 } from "@mui/x-data-grid";
-import { Box, Typography, TextField } from "@mui/material";
+import { Box, Typography, TextField, Modal, IconButton } from "@mui/material";
+import { Close } from "@mui/icons-material";
 import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
 import Layout from "@/components/transitionlayout";
 
@@ -17,7 +18,7 @@ const OrderPage = () => {
     {
       id: 1,
       orderNumber: "ORD-001",
-      customerName: "John Doe",
+      customerName: "Prajwol Bakhati",
       totalAmount: 150.25,
       status: "Pending",
       date: "2024-07-10",
@@ -25,7 +26,7 @@ const OrderPage = () => {
     {
       id: 2,
       orderNumber: "ORD-002",
-      customerName: "Jane Smith",
+      customerName: "Srijan Karki",
       totalAmount: 89.99,
       status: "Confirmed",
       date: "2024-07-09",
@@ -34,6 +35,8 @@ const OrderPage = () => {
 
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [openDetailsModal, setOpenDetailsModal] = useState(false);
 
   const columns = [
     { field: "orderNumber", headerName: "Order Number", width: 150 },
@@ -54,6 +57,17 @@ const OrderPage = () => {
         order.status.toLowerCase().includes(value)
     );
     setFilteredOrders(filteredData);
+  };
+
+  const handleOpenDetails = (id) => {
+    const order = orders.find((order) => order.id === id);
+    setSelectedOrder(order);
+    setOpenDetailsModal(true);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedOrder(null);
+    setOpenDetailsModal(false);
   };
 
   return (
@@ -107,8 +121,53 @@ const OrderPage = () => {
               </GridToolbarContainer>
             ),
           }}
+          onRowClick={(row) => handleOpenDetails(row.id)}
         />
       </div>
+
+      <Modal open={openDetailsModal} onClose={handleCloseDetails}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 4,
+          }}
+        >
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <IconButton onClick={handleCloseDetails} size="small">
+              <Close />
+            </IconButton>
+          </Box>
+          <Typography variant="h5" component="h2" gutterBottom>
+            Order Details
+          </Typography>
+          {selectedOrder && (
+            <div>
+              <Typography variant="body1" gutterBottom>
+                Order Number: {selectedOrder.orderNumber}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Customer Name: {selectedOrder.customerName}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Total Amount: ${selectedOrder.totalAmount.toFixed(2)}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Status: {selectedOrder.status}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Date: {selectedOrder.date}
+              </Typography>
+            </div>
+          )}
+        </Box>
+      </Modal>
     </Layout>
   );
 };
