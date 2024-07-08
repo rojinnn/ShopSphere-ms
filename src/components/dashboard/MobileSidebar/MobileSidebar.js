@@ -171,7 +171,7 @@ const MobileSideBar = ({ onToggle }) => {
     },
     {
       title: "Orders",
-      link: "/order",
+      link: "/orders",
       icon: (
         <ReceiptIcon size={24} className="icon" style={{ color: "Yellow" }} />
       ),
