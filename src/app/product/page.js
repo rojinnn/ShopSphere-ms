@@ -1,66 +1,20 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Box, Typography, TextField, Button } from "@mui/material";
+import { useRouter } from "next/router";
+import Layout from "@/components/transitionlayout";
+import CustomBreadcrumbs from "@/components/CustomBreadCrumbs";
+import AddProductModal from "@/components/AddProductModal"; // Adjust the import path as per your project structure
 import {
-  Card,
-  CardContent,
-  CardActions,
-  Typography,
-  Button,
-  Box,
-  Grid,
-  Container,
-  Select,
-  MenuItem,
-  Slider,
-  FormControlLabel,
-  Checkbox,
-} from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
-import { motion } from "framer-motion";
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarDensitySelector,
+  GridToolbarExport,
+} from "@mui/x-data-grid";
 
-const ProductCard = ({ product }) => {
-  return (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ duration: 0.2 }}
-    >
-      <Card>
-        <img
-          src={product.image}
-          alt={product.name}
-          style={{
-            width: "100%",
-            height: "200px",
-            objectFit: "cover",
-          }}
-        />
-        <CardContent>
-          <Typography variant="h6">{product.name}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {product.description}
-          </Typography>
-          <Box display="flex" alignItems="center" mt={2}>
-            <StarIcon color="primary" />
-            <Typography variant="body1" ml={0.5}>
-              {product.rating}
-            </Typography>
-            <Typography variant="h6" ml={18}>
-              ${product.price}
-            </Typography>
-          </Box>
-        </CardContent>
-        <CardActions>
-          <Button fullWidth variant="contained" color="primary">
-            Add to Cart
-          </Button>
-        </CardActions>
-      </Card>
-    </motion.div>
-  );
-};
-
-export default function ProductList() {
+const ProductList = () => {
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -118,102 +72,110 @@ export default function ProductList() {
     },
   ]);
 
-  const [filters, setFilters] = useState({
-    category: "",
-    priceRange: { min: 0, max: 100 },
-    availability: false,
-  });
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Function to update filters
-  const handleFiltersChange = (newFilters) => {
-    setFilters({ ...filters, ...newFilters });
+  const columns = [
+    { field: "name", headerName: "Name", width: 200 },
+    { field: "category", headerName: "Category", width: 150 },
+    { field: "description", headerName: "Description", width: 300 },
+    { field: "rating", headerName: "Rating", width: 120 },
+    { field: "price", headerName: "Price", width: 120 },
+  ];
+
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+
+    const filteredData = products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(value) ||
+        product.description.toLowerCase().includes(value) ||
+        product.category.toLowerCase().includes(value)
+    );
+    setFilteredProducts(filteredData);
   };
 
-  // Function to filter products based on current filters
-  const filteredProducts = products.filter((product) => {
-    const meetsCategoryFilter =
-      !filters.category || product.category === filters.category;
-    const meetsPriceRangeFilter =
-      product.price >= filters.priceRange.min &&
-      product.price <= filters.priceRange.max;
-    const meetsAvailabilityFilter = !filters.availability || product.available;
+  const handleAddProduct = () => {
+    setIsModalOpen(true);
+  };
 
-    return (
-      meetsCategoryFilter && meetsPriceRangeFilter && meetsAvailabilityFilter
-    );
-  });
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleProductAddition = (newProduct) => {
+    const updatedProducts = [
+      ...products,
+      { id: products.length + 1, ...newProduct },
+    ];
+    setProducts(updatedProducts);
+    setIsModalOpen(false);
+  };
 
   return (
-    <Container>
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Featured Products
-        </Typography>
-        <Typography variant="h6" color="textSecondary">
-          Discover our curated selection of high-quality products.
-        </Typography>
+    <Layout>
+      <CustomBreadcrumbs
+        title={"Products"}
+        links={[
+          {
+            path: "/product",
+            title: "Product",
+            active: true,
+          },
+        ]}
+      />
+      <Box
+        my={4}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <div>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Featured Products
+          </Typography>
+        </div>
+        <Button variant="contained" color="primary" onClick={handleAddProduct}>
+          Add Product
+        </Button>
       </Box>
-
-      {/* Filter panel */}
-      <Box mb={4}>
-        <Typography variant="h6" gutterBottom>
-          Filters
-        </Typography>
-        <Grid container spacing={6}>
-          <Grid item xs={12} sm={6} md={3}>
-            <Select
-              value={filters.category}
-              onChange={(e) =>
-                handleFiltersChange({ category: e.target.value })
-              }
-              fullWidth
-            >
-              <MenuItem value="">All Categories</MenuItem>
-              <MenuItem value="Clothing">Clothing</MenuItem>
-              <MenuItem value="Home">Home</MenuItem>
-              <MenuItem value="Accessories">Accessories</MenuItem>
-            </Select>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Typography id="price-range-slider" gutterBottom>
-              Price Range
-            </Typography>
-            <Slider
-              value={[filters.priceRange.min, filters.priceRange.max]}
-              onChange={(e, newValue) =>
-                handleFiltersChange({
-                  priceRange: { min: newValue[0], max: newValue[1] },
-                })
-              }
-              valueLabelDisplay="auto"
-              min={0}
-              max={100}
-              aria-labelledby="price-range-slider"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={filters.availability}
-                  onChange={(e) =>
-                    handleFiltersChange({ availability: e.target.checked })
-                  }
-                />
-              }
-              label="Available Only"
-            />
-          </Grid>
-        </Grid>
+      <Box my={2}>
+        <TextField
+          label="Search Products"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
       </Box>
-
-      <Grid container spacing={4}>
-        {filteredProducts.map((product) => (
-          <Grid item xs={12} sm={6} lg={4} key={product.id}>
-            <ProductCard product={product} />
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
+      <div style={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={searchTerm ? filteredProducts : products}
+          columns={columns}
+          pageSize={5}
+          pagination
+          rowsPerPageOptions={[5, 10, 20]}
+          components={{
+            Toolbar: () => (
+              <GridToolbarContainer>
+                <GridToolbarColumnsButton />
+                <GridToolbarFilterButton />
+                <GridToolbarDensitySelector />
+                <GridToolbarExport />
+              </GridToolbarContainer>
+            ),
+          }}
+        />
+      </div>
+      <AddProductModal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        onAdd={handleProductAddition}
+      />
+    </Layout>
   );
-}
+};
+
+export default ProductList;
