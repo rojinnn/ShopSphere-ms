@@ -172,7 +172,7 @@ const SideBar = ({ onToggle }) => {
     },
     {
       title: "Customers",
-      link: "/customer",
+      link: "/customers",
       icon: <PersonIcon size={24} className="icon" />,
     },
     {
