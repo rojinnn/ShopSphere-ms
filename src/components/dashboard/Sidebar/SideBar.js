@@ -23,6 +23,7 @@ import HelpIcon from "@mui/icons-material/Help";
 import { Category } from "@mui/icons-material";
 import { usePathname } from "next/navigation";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { BrandingWatermark as BrandIcon } from "@mui/icons-material";
 
 // Define the Wrapper styled component
 const Wrapper = styled.div`
@@ -168,6 +169,13 @@ const SideBar = ({ onToggle }) => {
       title: "Categories",
       link: "/category",
       icon: <Category size={24} className="icon" style={{ color: "Yellow" }} />,
+    },
+    {
+      title: "Brands",
+      link: "/brand",
+      icon: (
+        <BrandIcon size={24} className="icon" style={{ color: "Yellow" }} />
+      ),
     },
     {
       title: "Orders",

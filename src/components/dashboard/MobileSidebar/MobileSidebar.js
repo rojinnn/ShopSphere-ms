@@ -1,35 +1,28 @@
 "use client";
-import Link from "next/link";
-import React, { useState } from "react";
-import { MdDashboard } from "react-icons/md";
-import { FaBell, FaEuroSign, FaHouseUser, FaUsers } from "react-icons/fa";
-import styled from "styled-components";
-import { GrGallery } from "react-icons/gr";
-import { usePathname } from "next/navigation";
 import {
+  Divider,
   Drawer,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Divider,
-  Avatar,
 } from "@mui/material";
-import { FaAngleLeft } from "react-icons/fa";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { MdDashboard } from "react-icons/md";
+import styled from "styled-components";
 
-import { RiPagesLine, RiReservedLine } from "react-icons/ri";
-
-import { ImSpoonKnife } from "react-icons/im";
-import { GiHamburgerMenu } from "react-icons/gi";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import ReceiptIcon from "@mui/icons-material/Receipt";
-import PersonIcon from "@mui/icons-material/Person";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import { BrandingWatermark as BrandIcon, Category } from "@mui/icons-material";
 import DescriptionIcon from "@mui/icons-material/Description";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import HelpIcon from "@mui/icons-material/Help";
-import { Category } from "@mui/icons-material";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import PersonIcon from "@mui/icons-material/Person";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 const Wrapper = styled.div`
   .sideBar {
@@ -174,6 +167,13 @@ const MobileSideBar = ({ onToggle }) => {
       title: "Categories",
       link: "/category",
       icon: <Category size={24} className="icon" style={{ color: "Yellow" }} />,
+    },
+    {
+      title: "Brands",
+      link: "/brand",
+      icon: (
+        <BrandIcon size={24} className="icon" style={{ color: "Yellow" }} />
+      ),
     },
     {
       title: "Orders",
