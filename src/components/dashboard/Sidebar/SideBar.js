@@ -20,6 +20,7 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import DescriptionIcon from "@mui/icons-material/Description";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import HelpIcon from "@mui/icons-material/Help";
+import { Category } from "@mui/icons-material";
 import { usePathname } from "next/navigation";
 import { GiHamburgerMenu } from "react-icons/gi";
 
@@ -162,6 +163,11 @@ const SideBar = ({ onToggle }) => {
         />
       ),
       //   icon: <RiPagesLine size={24} className="icon" />,
+    },
+    {
+      title: "Categories",
+      link: "/category",
+      icon: <Category size={24} className="icon" style={{ color: "Yellow" }} />,
     },
     {
       title: "Orders",
