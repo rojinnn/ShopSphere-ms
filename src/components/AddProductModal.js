@@ -10,6 +10,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import TextEditor from "./texteditor";
 
 const AddProductModal = ({ open, onClose, onAdd }) => {
   const [newProduct, setNewProduct] = useState({
@@ -79,14 +80,12 @@ const AddProductModal = ({ open, onClose, onAdd }) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
+              <TextEditor
                 label="Description"
-                name="description"
                 value={newProduct.description}
-                onChange={handleChange}
-                variant="outlined"
-                size="small"
+                handleChange={(value) =>
+                  handleChange({ target: { name: "description", value } })
+                }
               />
             </Grid>
             <Grid item xs={6}>
