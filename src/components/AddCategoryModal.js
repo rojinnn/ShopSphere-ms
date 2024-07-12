@@ -9,6 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import TextEditor from "./texteditor";
 
 const AddCategoryModal = ({ open, onClose, onAdd }) => {
   const [newCategory, setNewCategory] = useState({
@@ -76,14 +77,12 @@ const AddCategoryModal = ({ open, onClose, onAdd }) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
+              <TextEditor
                 label="Description"
-                name="description"
                 value={newCategory.description}
-                onChange={handleChange}
-                variant="outlined"
-                size="small"
+                handleChange={(value) =>
+                  handleChange({ target: { name: "description", value } })
+                }
               />
             </Grid>
           </Grid>

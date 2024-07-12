@@ -10,6 +10,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import TextEditor from "./texteditor";
 
 const AddPromotionModal = ({ open, onClose, onAdd }) => {
   const [newPromotion, setNewPromotion] = useState({
@@ -79,14 +80,12 @@ const AddPromotionModal = ({ open, onClose, onAdd }) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
+              <TextEditor
                 label="Description"
-                name="description"
                 value={newPromotion.description}
-                onChange={handleChange}
-                variant="outlined"
-                size="small"
+                handleChange={(value) =>
+                  handleChange({ target: { name: "description", value } })
+                }
               />
             </Grid>
             <Grid item xs={6}>
